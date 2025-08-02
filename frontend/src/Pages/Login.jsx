@@ -11,23 +11,28 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await axios.post("http://localhost:3000/login", {
-          withCredentials: true,
-        }, {
-          email,
-          password
-        })
-        toast.success("Login Successfull");
-        setRedirect(true);
-        navigate("/");
-
-    } catch (error) {
-        console.log(error);
-        toast.error("Login failed");
-    }
+  e.preventDefault();
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/login",
+      {
+        email: email,
+        password: password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    localStorage.setItem("token", response.data.token)
+    toast.success("Login Successfull");
+    navigate("/");
+  } catch (error) {
+    console.log(error);
+    const msg = error?.response?.data?.message || "Login failed";
+    toast.error(msg);
   }
+};
+
 
   return (
     <div className='bg-gradient-to-r from-white-700 to-white-800 h-screen'>

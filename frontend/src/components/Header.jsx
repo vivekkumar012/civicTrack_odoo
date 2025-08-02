@@ -18,7 +18,10 @@ import {
   Trash2,
   Edit,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import IssuesMap from "./Issuesmap";
+import generateMockIssues from "../Pages/generateMock";
 
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,67 +52,83 @@ const Header = () => {
   });
 
   //   // Mock data for issues
-  //   const [issues, setIssues] = useState([
-  //     {
-  //       id: 1,
-  //       title: 'Large pothole on Main Street',
-  //       description: 'Deep pothole causing traffic issues near the market area',
-  //       category: 'Roads',
-  //       status: 'Reported',
-  //       location: { lat: 21.2504, lng: 81.6286 },
-  //       address: 'Main Street, Raipur',
-  //       reportedBy: 'Anonymous',
-  //       reportedAt: '2025-08-01T10:30:00Z',
-  //       photos: ['https://via.placeholder.com/300x200?text=Pothole'],
-  //       distance: 1.2,
-  //       statusHistory: [
-  //         { status: 'Reported', timestamp: '2025-08-01T10:30:00Z', note: 'Issue reported by citizen' }
-  //       ],
-  //       flagCount: 0
-  //     },
-  //     {
-  //       id: 2,
-  //       title: 'Broken streetlight',
-  //       description: 'Street light not working for past 3 days',
-  //       category: 'Lighting',
-  //       status: 'In Progress',
-  //       location: { lat: 21.2524, lng: 81.6306 },
-  //       address: 'Park Road, Raipur',
-  //       reportedBy: 'Rajesh Kumar',
-  //       reportedAt: '2025-07-30T14:20:00Z',
-  //       photos: ['https://via.placeholder.com/300x200?text=Broken+Light'],
-  //       distance: 2.1,
-  //       statusHistory: [
-  //         { status: 'Reported', timestamp: '2025-07-30T14:20:00Z', note: 'Issue reported by citizen' },
-  //         { status: 'In Progress', timestamp: '2025-08-01T09:15:00Z', note: 'Work order assigned to maintenance team' }
-  //       ],
-  //       flagCount: 0
-  //     },
-  //     {
-  //       id: 3,
-  //       title: 'Water leak on Gandhi Road',
-  //       description: 'Major water leak causing road flooding',
-  //       category: 'Water Supply',
-  //       status: 'Resolved',
-  //       location: { lat: 21.2494, lng: 81.6276 },
-  //       address: 'Gandhi Road, Raipur',
-  //       reportedBy: 'Priya Sharma',
-  //       reportedAt: '2025-07-28T08:45:00Z',
-  //       photos: ['https://via.placeholder.com/300x200?text=Water+Leak'],
-  //       distance: 2.8,
-  //       statusHistory: [
-  //         { status: 'Reported', timestamp: '2025-07-28T08:45:00Z', note: 'Issue reported by citizen' },
-  //         { status: 'In Progress', timestamp: '2025-07-29T11:30:00Z', note: 'Repair team dispatched' },
-  //         { status: 'Resolved', timestamp: '2025-07-30T16:20:00Z', note: 'Leak repaired and road cleaned' }
-  //       ],
-  //       flagCount: 0
-  //     }
-  //   ]);
+  // const [issues, setIssues] = useState([
+  //   {
+  //     id: 1,
+  //     title: 'Large pothole on Main Street',
+  //     description: 'Deep pothole causing traffic issues near the market area',
+  //     category: 'Roads',
+  //     status: 'Reported',
+  //     location: { lat: 21.2504, lng: 81.6286 },
+  //     address: 'Main Street, Raipur',
+  //     reportedBy: 'Anonymous',
+  //     reportedAt: '2025-08-01T10:30:00Z',
+  //     photos: ['https://via.placeholder.com/300x200?text=Pothole'],
+  //     distance: 1.2,
+  //     statusHistory: [
+  //       { status: 'Reported', timestamp: '2025-08-01T10:30:00Z', note: 'Issue reported by citizen' }
+  //     ],
+  //     flagCount: 0
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Broken streetlight',
+  //     description: 'Street light not working for past 3 days',
+  //     category: 'Lighting',
+  //     status: 'In Progress',
+  //     location: { lat: 21.2524, lng: 81.6306 },
+  //     address: 'Park Road, Raipur',
+  //     reportedBy: 'Rajesh Kumar',
+  //     reportedAt: '2025-07-30T14:20:00Z',
+  //     photos: ['https://via.placeholder.com/300x200?text=Broken+Light'],
+  //     distance: 2.1,
+  //     statusHistory: [
+  //       { status: 'Reported', timestamp: '2025-07-30T14:20:00Z', note: 'Issue reported by citizen' },
+  //       { status: 'In Progress', timestamp: '2025-08-01T09:15:00Z', note: 'Work order assigned to maintenance team' }
+  //     ],
+  //     flagCount: 0
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Water leak on Gandhi Road',
+  //     description: 'Major water leak causing road flooding',
+  //     category: 'Water Supply',
+  //     status: 'Resolved',
+  //     location: { lat: 21.2494, lng: 81.6276 },
+  //     address: 'Gandhi Road, Raipur',
+  //     reportedBy: 'Priya Sharma',
+  //     reportedAt: '2025-07-28T08:45:00Z',
+  //     photos: ['https://via.placeholder.com/300x200?text=Water+Leak'],
+  //     distance: 2.8,
+  //     statusHistory: [
+  //       { status: 'Reported', timestamp: '2025-07-28T08:45:00Z', note: 'Issue reported by citizen' },
+  //       { status: 'In Progress', timestamp: '2025-07-29T11:30:00Z', note: 'Repair team dispatched' },
+  //       { status: 'Resolved', timestamp: '2025-07-30T16:20:00Z', note: 'Leak repaired and road cleaned' }
+  //     ],
+  //     flagCount: 0
+  //   }
+  // ]);
 
   //DATA STATE
+ 
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  useEffect(() => {
+  // Use mock data if no real data is available
+  if (issues.length === 0) {
+    setIssues(generateMockIssues());
+  }
+}, []);
+
+const [useMockData, setUseMockData] = useState(true); // Set to false for production
+useEffect(() => {
+  if (useMockData) {
+    setIssues(generateMockIssues());
+  } else {
+    fetchIssues(); // Your real API call
+  }
+}, [useMockData]);
 
   const categories = [
     "Roads",
@@ -136,18 +155,26 @@ const Header = () => {
   //   setIsAuthenticated(true);
   // }
 
-  const API_BASE_URL = "http://localhost:3001/api";
+  const API_BASE_URL = "http://localhost:3000/api";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+    //const userData = localStorage.getItem("user");
 
-    if (token && userData) {
-      setUser(JSON.parse(userData));
+    if (token) {
+      //setUser(JSON.parse(userData));
       setIsAuthenticated(true);
       fetchIssues();
     }
   }, []);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    toast.success("Logout Successfully");
+    navigate("/login");
+  };
 
   // Fetch Issues from Backend
   const fetchIssues = async () => {
@@ -313,7 +340,10 @@ const Header = () => {
                 <Settings className="h-5 w-5" />
               </button>
               {isAuthenticated ? (
-                <button className="text-sm font-medium text-gray-700">
+                <button
+                  onClick={handleLogout}
+                  className="text-sm font-medium text-gray-700"
+                >
                   Logout
                 </button>
               ) : (
@@ -612,6 +642,12 @@ const Header = () => {
                   reported yet.
                 </p>
               </div>
+              // <IssuesMap
+              //   issues={filteredIssues}
+              //   userLocation={userLocation}
+              //   onIssueClick={setSelectedIssue}
+              //   filters={filters}
+              // />
             )}
           </div>
         ) : (
