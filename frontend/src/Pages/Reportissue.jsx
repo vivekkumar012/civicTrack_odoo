@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-=======
+
 // src/pages/ReportIssue.jsx
->>>>>>> c3208eb517c798c926f2a1b48f7968365ac6536d
 import React, { useState, useEffect, useRef } from "react";
 import { X, MapPin, Crosshair, Camera, Upload } from "lucide-react";
 
