@@ -8,6 +8,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -19,6 +21,7 @@ function Login() {
         })
         toast.success("Login Successfull");
         setRedirect(true);
+        navigate("/");
 
     } catch (error) {
         console.log(error);
