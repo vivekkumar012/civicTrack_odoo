@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 function Signup() {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState(""); // ✅ New state
+  const [phone, setPhone] = useState(""); 
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -17,7 +19,7 @@ function Signup() {
         {
           username,
           email,
-          phone, // ✅ Include phone
+          phone,
           password,
         },
         {
@@ -25,6 +27,8 @@ function Signup() {
         }
       );
       toast.success("Signup Successfully");
+      navigate("/login");
+      
     } catch (error) {
       console.log(error);
       toast.error("Registration failed, try again later");
