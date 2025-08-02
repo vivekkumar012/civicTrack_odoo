@@ -10,6 +10,7 @@ function Login() {
 
   const navigate = useNavigate();
 
+<<<<<<< HEAD
  const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -30,6 +31,25 @@ function Login() {
     console.log(error);
     const msg = error?.response?.data?.message || "Login failed";
     toast.error(msg);
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post("http://localhost:3000/login", {
+          withCredentials: true,
+        }, {
+          email,
+          password
+        })
+        toast.success("Login Successfull");
+        setRedirect(true);
+        navigate("/");
+
+    } catch (error) {
+        console.log(error);
+        toast.error("Login failed");
+    }
+>>>>>>> c3208eb517c798c926f2a1b48f7968365ac6536d
   }
 };
 
