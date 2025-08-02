@@ -131,6 +131,11 @@ const Header = () => {
     Resolved: CheckCircle,
   };
 
+  // const token = localStorage.getItem("token");
+  // if(token) {
+  //   setIsAuthenticated(true);
+  // }
+
   const API_BASE_URL = "http://localhost:3001/api";
 
   useEffect(() => {
@@ -307,15 +312,21 @@ const Header = () => {
               >
                 <Settings className="h-5 w-5" />
               </button>
-              <div className="flex items-center space-x-2">
-                <User className="h-6 w-6 text-gray-400" />
-                <Link
-                  to={"/login"}
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Login
-                </Link>
-              </div>
+              {isAuthenticated ? (
+                <button className="text-sm font-medium text-gray-700">
+                  Logout
+                </button>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <User className="h-6 w-6 text-gray-400" />
+                  <Link
+                    to={"/login"}
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -370,13 +381,15 @@ const Header = () => {
             <span>Report Issue</span>
           </button> */}
 
-          <Link
-            to="/report"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Report Issue</span>
-          </Link>
+          {isAuthenticated && (
+            <Link
+              to="/report"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Report Issue</span>
+            </Link>
+          )}
         </div>
 
         {/* Filters */}
