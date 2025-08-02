@@ -56,55 +56,64 @@ export const register = async (req, res) => {
 //login
 
 export const login = async (req, res) => {
-  const { userName, email, password } = req.body;
-
-  if (!userName || !email || !password) {
-    return res.status(400).json({
-      message: "Something is missing in login !!",
-      success: false,
-    });
-  }
-
-  const user = await User.findOne({
-    email,
-  });
-
-  if (!user) {
-    return res.status(400).json({
-      message: "No registerd user with given email found !!",
-      success: false,
-    });
-  }
-
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (!isPasswordCorrect) {
-    return res.status(400).json({
-      message: "Invalid password !!",
-      success: false,
-    });
-  }
-
-  const token = jwt.sign(
-    {
-      userId: user._id,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "1d",
-    }
-  );
-
-  res
-    .status(201)
-    .cookie("token", token, {
-      maxAge: 1 * 1000 * 60 * 60 * 24,
-      httpOnly: true,
-      sameSite: true,
-    })
-    .json({
-      message: "User logged in !!",
-      success: true,
-    });
+ try {
+   const {  email, password } = req.body;
+ 
+   if ( !email || !password) {
+     return res.status(400).json({
+       message: "Something is missing in login !!",
+       success: false,
+     });
+   }
+ 
+   const user = await User.findOne({
+     email,
+   });
+ 
+   if (!user) {
+     return res.status(400).json({
+       message: "No registerd user with given email found !!",
+       success: false,
+     });
+   }
+ 
+   const isPasswordCorrect = await bcrypt.compare(password, user.password);
+   if (!isPasswordCorrect) {
+     return res.status(400).json({
+       message: "Invalid password !!",
+       success: false,
+     });
+   }
+ 
+   const token = jwt.sign(
+     {
+       userId: user._id,
+     },
+     process.env.JWT_SECRET,
+     {
+       expiresIn: "1d",
+     }
+   );
+ 
+   res
+     .status(201)
+     .cookie("token", token, {
+       maxAge: 1 * 1000 * 60 * 60 * 24,
+       httpOnly: true,
+       sameSite: true,
+     })
+     .json({
+       message: "User logged in !!",
+       success: true,
+     });
+ } catch (error) {
+      return res.status(500).json({
+        message:"Internal error while login ",
+        success:false,
+        err:error.message,
+      })
+      console.log(error);
+ }
 };
 // logout
 // update
