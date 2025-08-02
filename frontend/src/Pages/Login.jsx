@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Link } from "react-router-dom";
+import { MapPin } from "lucide-react";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +21,7 @@ function Login() {
         })
         toast.success("Login Successfull");
         setRedirect(true);
+        navigate("/");
 
     } catch (error) {
         console.log(error);
@@ -31,7 +35,8 @@ function Login() {
         {/* Header */}
         <header className='absolute top-0 left-0 w-full flex items-center justify-between p-5'>
           <div className='flex items-center space-x-2'>
-            <Link to={"/"} className='text-2xl font-bold text-orange-500'>CivicTrack</Link>
+            <MapPin className="h-8 w-8 text-blue-600" />
+            <Link to={"/"} className="text-xl font-bold text-gray-900">CivicTrack</Link>
           </div>
           <div className='flex items-center space-x-4'>
                 <Link

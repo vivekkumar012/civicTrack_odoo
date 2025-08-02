@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { MapPin } from "lucide-react";
 import toast from "react-hot-toast";
 
 function Signup() {
@@ -19,11 +20,8 @@ function Signup() {
         {
           username,
           email,
-<<<<<<< HEAD
           phone,
-=======
           phone, 
->>>>>>> f09785aa78a877c36676a6319ff923961087eb49
           password,
         },
         {
@@ -47,7 +45,8 @@ function Signup() {
           <header className="flex justify-between items-center absolute top-0 left-0 w-full p-5">
             <div className="flex items-center space-x-2">
               {/* <img src="" alt="" className="h-10 w-10 rounded-full" /> */}
-              <Link to={"/"} className="text-2xl font-bold text-orange-500">
+              <MapPin className="h-8 w-8 text-blue-600" />
+              <Link to={"/"} className="text-xl font-bold text-gray-900">
                 CivicTrack
               </Link>
             </div>
