@@ -14,15 +14,16 @@ app.use(
 );
 app.use(cookieParser());
 
-const corsOption = {
-  origin: process.env.CORS_ORIGIN,
-};
+app.use(cors({
+  origin: "http://localhost:5173", // your frontend origin
+  credentials: true, // allow cookies, authorization headers
+}));
 
-app.use(
-  cors({
-    corsOption,
-  })
-);
+// app.use(
+//   cors({
+//     corsOption,
+//   })
+// );
 
 
 
