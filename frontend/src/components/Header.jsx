@@ -143,16 +143,16 @@ const Header = () => {
       fetchIssues();
     }
   }, []);
-  
+
   // Fetch Issues from Backend
   const fetchIssues = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/issues`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
@@ -160,10 +160,10 @@ const Header = () => {
         const data = await response.json();
         setIssues(data.issues || data); // Handle different response structures
       } else {
-        setError('Failed to fetch issues');
+        setError("Failed to fetch issues");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -172,34 +172,34 @@ const Header = () => {
   // Create New Issue
   const handleReportSubmit = async () => {
     if (!newReport.title || !newReport.category) {
-      setError('Please fill in required fields');
+      setError("Please fill in required fields");
       return;
     }
 
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       // Create FormData for file upload
       const formData = new FormData();
-      formData.append('title', newReport.title);
-      formData.append('description', newReport.description);
-      formData.append('category', newReport.category);
-      formData.append('latitude', userLocation.lat);
-      formData.append('longitude', userLocation.lng);
-      formData.append('isAnonymous', newReport.isAnonymous);
-      
+      formData.append("title", newReport.title);
+      formData.append("description", newReport.description);
+      formData.append("category", newReport.category);
+      formData.append("latitude", userLocation.lat);
+      formData.append("longitude", userLocation.lng);
+      formData.append("isAnonymous", newReport.isAnonymous);
+
       // Add photos
       newReport.photos.forEach((photo, index) => {
         if (photo instanceof File) {
-          formData.append('photos', photo);
+          formData.append("photos", photo);
         }
       });
 
       const response = await fetch(`${API_BASE_URL}/issues`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -207,15 +207,21 @@ const Header = () => {
       if (response.ok) {
         const newIssue = await response.json();
         setIssues([newIssue, ...issues]);
-        setNewReport({ title: '', description: '', category: '', photos: [], isAnonymous: false });
+        setNewReport({
+          title: "",
+          description: "",
+          category: "",
+          photos: [],
+          isAnonymous: false,
+        });
         setShowReportModal(false);
         setError(null);
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to create issue');
+        setError(errorData.message || "Failed to create issue");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -224,12 +230,12 @@ const Header = () => {
   // Update Issue Status (Admin only)
   const updateIssueStatus = async (issueId, newStatus) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/issues/${issueId}/status`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -237,39 +243,41 @@ const Header = () => {
       if (response.ok) {
         fetchIssues(); // Refresh issues
       } else {
-        setError('Failed to update issue status');
+        setError("Failed to update issue status");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     }
   };
 
   // Flag Issue
   const flagIssue = async (issueId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/issues/${issueId}/flag`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
         fetchIssues(); // Refresh issues
       } else {
-        setError('Failed to flag issue');
+        setError("Failed to flag issue");
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     }
   };
 
   // Filter issues based on current filters
-  const filteredIssues = issues.filter(issue => {
-    if (filters.status !== 'all' && issue.status !== filters.status) return false;
-    if (filters.category !== 'all' && issue.category !== filters.category) return false;
+  const filteredIssues = issues.filter((issue) => {
+    if (filters.status !== "all" && issue.status !== filters.status)
+      return false;
+    if (filters.category !== "all" && issue.category !== filters.category)
+      return false;
     // Add distance filtering logic based on your backend data structure
     return true;
   });
@@ -319,7 +327,10 @@ const Header = () => {
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
             <div className="flex justify-between items-center">
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700">
+              <button
+                onClick={() => setError(null)}
+                className="text-red-500 hover:text-red-700"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -351,13 +362,21 @@ const Header = () => {
             </button>
           </div>
 
-          <button
+          {/* <button
             onClick={() => setShowReportModal(true)}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
           >
             <Plus className="h-5 w-5" />
             <span>Report Issue</span>
-          </button>
+          </button> */}
+
+          <Link
+            to="/report"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Report Issue</span>
+          </Link>
         </div>
 
         {/* Filters */}
@@ -365,12 +384,16 @@ const Header = () => {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center space-x-2">
               <Filter className="h-5 w-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700">Filters:</span>
+              <span className="text-sm font-medium text-gray-700">
+                Filters:
+              </span>
             </div>
-            
+
             <select
               value={filters.status}
-              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, status: e.target.value })
+              }
               className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             >
               <option value="all">All Status</option>
@@ -381,18 +404,24 @@ const Header = () => {
 
             <select
               value={filters.category}
-              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, category: e.target.value })
+              }
               className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             >
               <option value="all">All Categories</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
 
             <select
               value={filters.distance}
-              onChange={(e) => setFilters({ ...filters, distance: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, distance: e.target.value })
+              }
               className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             >
               <option value="1">Within 1 km</option>
@@ -422,18 +451,23 @@ const Header = () => {
         )}
 
         {/* Main Content */}
-        {currentView === 'list' ? (
+        {currentView === "list" ? (
           <div className="grid gap-4">
             {filteredIssues.length > 0 ? (
-              filteredIssues.map(issue => {
+              filteredIssues.map((issue) => {
                 const StatusIcon = statusIcons[issue.status] || AlertTriangle;
                 return (
-                  <div key={issue.id || issue._id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                  <div
+                    key={issue.id || issue._id}
+                    className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+                  >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
                           <div className="flex items-start justify-between">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{issue.title}</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                              {issue.title}
+                            </h3>
                             <button
                               onClick={() => flagIssue(issue.id || issue._id)}
                               className="text-gray-400 hover:text-red-500 p-1"
@@ -442,19 +476,44 @@ const Header = () => {
                               <Flag className="h-4 w-4" />
                             </button>
                           </div>
-                          <p className="text-gray-600 mb-3">{issue.description}</p>
+                          <p className="text-gray-600 mb-3">
+                            {issue.description}
+                          </p>
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <span>📍 {issue.address || `${issue.latitude}, ${issue.longitude}`}</span>
-                            <span>👤 {issue.reportedBy || issue.userId?.name || 'Anonymous'}</span>
-                            <span>📅 {new Date(issue.createdAt || issue.reportedAt).toLocaleDateString()}</span>
-                            {issue.distance && <span>📏 {issue.distance.toFixed(1)} km away</span>}
+                            <span>
+                              📍{" "}
+                              {issue.address ||
+                                `${issue.latitude}, ${issue.longitude}`}
+                            </span>
+                            <span>
+                              👤{" "}
+                              {issue.reportedBy ||
+                                issue.userId?.name ||
+                                "Anonymous"}
+                            </span>
+                            <span>
+                              📅{" "}
+                              {new Date(
+                                issue.createdAt || issue.reportedAt
+                              ).toLocaleDateString()}
+                            </span>
+                            {issue.distance && (
+                              <span>
+                                📏 {issue.distance.toFixed(1)} km away
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColors[issue.status] || statusColors['Reported']}`}>
+                          <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                              statusColors[issue.status] ||
+                              statusColors["Reported"]
+                            }`}
+                          >
                             <StatusIcon className="h-3 w-3 mr-1" />
                             {issue.status}
                           </span>
@@ -467,21 +526,31 @@ const Header = () => {
                             </span>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center space-x-2">
-                          {user?.role === 'admin' && (
+                          {user?.role === "admin" && (
                             <div className="flex space-x-1">
-                              {issue.status !== 'In Progress' && (
+                              {issue.status !== "In Progress" && (
                                 <button
-                                  onClick={() => updateIssueStatus(issue.id || issue._id, 'In Progress')}
+                                  onClick={() =>
+                                    updateIssueStatus(
+                                      issue.id || issue._id,
+                                      "In Progress"
+                                    )
+                                  }
                                   className="text-yellow-600 hover:text-yellow-800 text-xs px-2 py-1 bg-yellow-50 rounded"
                                 >
                                   Mark In Progress
                                 </button>
                               )}
-                              {issue.status !== 'Resolved' && (
+                              {issue.status !== "Resolved" && (
                                 <button
-                                  onClick={() => updateIssueStatus(issue.id || issue._id, 'Resolved')}
+                                  onClick={() =>
+                                    updateIssueStatus(
+                                      issue.id || issue._id,
+                                      "Resolved"
+                                    )
+                                  }
                                   className="text-green-600 hover:text-green-800 text-xs px-2 py-1 bg-green-50 rounded"
                                 >
                                   Mark Resolved
@@ -504,7 +573,11 @@ const Header = () => {
                           {issue.photos.slice(0, 3).map((photo, index) => (
                             <img
                               key={index}
-                              src={typeof photo === 'string' ? photo : URL.createObjectURL(photo)}
+                              src={
+                                typeof photo === "string"
+                                  ? photo
+                                  : URL.createObjectURL(photo)
+                              }
                               alt={`Issue photo ${index + 1}`}
                               className="w-20 h-20 object-cover rounded-lg"
                             />
@@ -518,8 +591,13 @@ const Header = () => {
             ) : (
               <div className="text-center py-8">
                 <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Issues Found</h3>
-                <p className="text-gray-500">No issues match your current filters, or no issues have been reported yet.</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No Issues Found
+                </h3>
+                <p className="text-gray-500">
+                  No issues match your current filters, or no issues have been
+                  reported yet.
+                </p>
               </div>
             )}
           </div>
@@ -527,9 +605,16 @@ const Header = () => {
           <div className="bg-white rounded-lg shadow-sm h-96 flex items-center justify-center">
             <div className="text-center">
               <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Map View</h3>
-              <p className="text-gray-500">Interactive map showing all issues within your radius</p>
-              <p className="text-sm text-gray-400 mt-2">Map integration would be implemented with your preferred mapping service</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Map View
+              </h3>
+              <p className="text-gray-500">
+                Interactive map showing all issues within your radius
+              </p>
+              <p className="text-sm text-gray-400 mt-2">
+                Map integration would be implemented with your preferred mapping
+                service
+              </p>
             </div>
           </div>
         )}
@@ -548,7 +633,7 @@ const Header = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -557,7 +642,9 @@ const Header = () => {
                 <input
                   type="text"
                   value={newReport.title}
-                  onChange={(e) => setNewReport({ ...newReport, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, title: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   placeholder="Brief description of the issue"
                   required
@@ -570,13 +657,17 @@ const Header = () => {
                 </label>
                 <select
                   value={newReport.category}
-                  onChange={(e) => setNewReport({ ...newReport, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, category: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   required
                 >
                   <option value="">Select a category</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -587,7 +678,9 @@ const Header = () => {
                 </label>
                 <textarea
                   value={newReport.description}
-                  onChange={(e) => setNewReport({ ...newReport, description: e.target.value })}
+                  onChange={(e) =>
+                    setNewReport({ ...newReport, description: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                   rows="3"
                   placeholder="Provide more details about the issue"
@@ -611,7 +704,11 @@ const Header = () => {
                       {newReport.photos.map((photo, index) => (
                         <div key={index} className="relative">
                           <img
-                            src={typeof photo === 'string' ? photo : URL.createObjectURL(photo)}
+                            src={
+                              typeof photo === "string"
+                                ? photo
+                                : URL.createObjectURL(photo)
+                            }
                             alt={`Upload ${index + 1}`}
                             className="w-20 h-20 object-cover rounded-lg"
                           />
@@ -634,10 +731,18 @@ const Header = () => {
                   type="checkbox"
                   id="anonymous"
                   checked={newReport.isAnonymous}
-                  onChange={(e) => setNewReport({ ...newReport, isAnonymous: e.target.checked })}
+                  onChange={(e) =>
+                    setNewReport({
+                      ...newReport,
+                      isAnonymous: e.target.checked,
+                    })
+                  }
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="anonymous" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="anonymous"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Report anonymously
                 </label>
               </div>
@@ -656,7 +761,7 @@ const Header = () => {
                   disabled={loading}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {loading ? 'Submitting...' : 'Submit Report'}
+                  {loading ? "Submitting..." : "Submit Report"}
                 </button>
               </div>
             </div>
@@ -677,11 +782,13 @@ const Header = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">{selectedIssue.title}</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    {selectedIssue.title}
+                  </h3>
                   <p className="text-gray-600">{selectedIssue.description}</p>
                 </div>
 
@@ -692,26 +799,48 @@ const Header = () => {
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Status:</span>
-                    <span className={`ml-2 px-2 py-1 rounded-full text-xs ${statusColors[selectedIssue.status] || statusColors['Reported']}`}>
+                    <span
+                      className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                        statusColors[selectedIssue.status] ||
+                        statusColors["Reported"]
+                      }`}
+                    >
                       {selectedIssue.status}
                     </span>
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Location:</span>
-                    <span className="ml-2">{selectedIssue.address || `${selectedIssue.latitude}, ${selectedIssue.longitude}`}</span>
+                    <span className="ml-2">
+                      {selectedIssue.address ||
+                        `${selectedIssue.latitude}, ${selectedIssue.longitude}`}
+                    </span>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Reported by:</span>
-                    <span className="ml-2">{selectedIssue.reportedBy || selectedIssue.userId?.name || 'Anonymous'}</span>
+                    <span className="font-medium text-gray-700">
+                      Reported by:
+                    </span>
+                    <span className="ml-2">
+                      {selectedIssue.reportedBy ||
+                        selectedIssue.userId?.name ||
+                        "Anonymous"}
+                    </span>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Reported on:</span>
-                    <span className="ml-2">{new Date(selectedIssue.createdAt || selectedIssue.reportedAt).toLocaleString()}</span>
+                    <span className="font-medium text-gray-700">
+                      Reported on:
+                    </span>
+                    <span className="ml-2">
+                      {new Date(
+                        selectedIssue.createdAt || selectedIssue.reportedAt
+                      ).toLocaleString()}
+                    </span>
                   </div>
                   {selectedIssue.flagCount > 0 && (
                     <div>
                       <span className="font-medium text-gray-700">Flags:</span>
-                      <span className="ml-2 text-red-600">{selectedIssue.flagCount}</span>
+                      <span className="ml-2 text-red-600">
+                        {selectedIssue.flagCount}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -723,46 +852,74 @@ const Header = () => {
                       {selectedIssue.photos.map((photo, index) => (
                         <img
                           key={index}
-                          src={typeof photo === 'string' ? photo : URL.createObjectURL(photo)}
+                          src={
+                            typeof photo === "string"
+                              ? photo
+                              : URL.createObjectURL(photo)
+                          }
                           alt={`Issue photo ${index + 1}`}
                           className="w-full h-32 object-cover rounded-lg cursor-pointer hover:opacity-75"
-                          onClick={() => window.open(typeof photo === 'string' ? photo : URL.createObjectURL(photo), '_blank')}
+                          onClick={() =>
+                            window.open(
+                              typeof photo === "string"
+                                ? photo
+                                : URL.createObjectURL(photo),
+                              "_blank"
+                            )
+                          }
                         />
                       ))}
                     </div>
                   </div>
                 )}
 
-                {selectedIssue.statusHistory && selectedIssue.statusHistory.length > 0 && (
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-3">Status History</h4>
-                    <div className="space-y-3">
-                      {selectedIssue.statusHistory.map((entry, index) => (
-                        <div key={index} className="flex items-start space-x-3">
-                          <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                          <div>
-                            <div className="flex items-center space-x-2">
-                              <span className="font-medium text-sm">{entry.status}</span>
-                              <span className="text-xs text-gray-500">
-                                {new Date(entry.timestamp || entry.createdAt).toLocaleString()}
-                              </span>
+                {selectedIssue.statusHistory &&
+                  selectedIssue.statusHistory.length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-gray-700 mb-3">
+                        Status History
+                      </h4>
+                      <div className="space-y-3">
+                        {selectedIssue.statusHistory.map((entry, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start space-x-3"
+                          >
+                            <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <span className="font-medium text-sm">
+                                  {entry.status}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(
+                                    entry.timestamp || entry.createdAt
+                                  ).toLocaleString()}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {entry.note || entry.comment}
+                              </p>
                             </div>
-                            <p className="text-sm text-gray-600">{entry.note || entry.comment}</p>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {user?.role === 'admin' && (
+                {user?.role === "admin" && (
                   <div className="border-t pt-4">
-                    <h4 className="font-medium text-gray-700 mb-3">Admin Actions</h4>
+                    <h4 className="font-medium text-gray-700 mb-3">
+                      Admin Actions
+                    </h4>
                     <div className="flex space-x-2">
-                      {selectedIssue.status !== 'In Progress' && (
+                      {selectedIssue.status !== "In Progress" && (
                         <button
                           onClick={() => {
-                            updateIssueStatus(selectedIssue.id || selectedIssue._id, 'In Progress');
+                            updateIssueStatus(
+                              selectedIssue.id || selectedIssue._id,
+                              "In Progress"
+                            );
                             setSelectedIssue(null);
                           }}
                           className="px-3 py-1 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700"
@@ -770,10 +927,13 @@ const Header = () => {
                           Mark In Progress
                         </button>
                       )}
-                      {selectedIssue.status !== 'Resolved' && (
+                      {selectedIssue.status !== "Resolved" && (
                         <button
                           onClick={() => {
-                            updateIssueStatus(selectedIssue.id || selectedIssue._id, 'Resolved');
+                            updateIssueStatus(
+                              selectedIssue.id || selectedIssue._id,
+                              "Resolved"
+                            );
                             setSelectedIssue(null);
                           }}
                           className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
@@ -791,7 +951,7 @@ const Header = () => {
       )}
 
       {/* Admin Panel */}
-      {showAdminPanel && user?.role === 'admin' && (
+      {showAdminPanel && user?.role === "admin" && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center p-6 border-b">
@@ -803,84 +963,125 @@ const Header = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-900">Total Issues</h3>
-                  <p className="text-3xl font-bold text-blue-600">{issues.length}</p>
+                  <h3 className="text-lg font-semibold text-blue-900">
+                    Total Issues
+                  </h3>
+                  <p className="text-3xl font-bold text-blue-600">
+                    {issues.length}
+                  </p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-red-900">Reported</h3>
+                  <h3 className="text-lg font-semibold text-red-900">
+                    Reported
+                  </h3>
                   <p className="text-3xl font-bold text-red-600">
-                    {issues.filter(i => i.status === 'Reported').length}
+                    {issues.filter((i) => i.status === "Reported").length}
                   </p>
                 </div>
                 <div className="bg-yellow-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-yellow-900">In Progress</h3>
+                  <h3 className="text-lg font-semibold text-yellow-900">
+                    In Progress
+                  </h3>
                   <p className="text-3xl font-bold text-yellow-600">
-                    {issues.filter(i => i.status === 'In Progress').length}
+                    {issues.filter((i) => i.status === "In Progress").length}
                   </p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-green-900">Resolved</h3>
+                  <h3 className="text-lg font-semibold text-green-900">
+                    Resolved
+                  </h3>
                   <p className="text-3xl font-bold text-green-600">
-                    {issues.filter(i => i.status === 'Resolved').length}
+                    {issues.filter((i) => i.status === "Resolved").length}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Flagged Issues</h3>
-                {issues.filter(issue => issue.flagCount > 0).length > 0 ? (
-                  issues.filter(issue => issue.flagCount > 0).map(issue => (
-                    <div key={issue.id || issue._id} className="border border-red-200 rounded-lg p-4 bg-red-50">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h4 className="font-medium">{issue.title}</h4>
-                          <p className="text-sm text-gray-600">{issue.description}</p>
-                          <p className="text-xs text-red-600 mt-1">Flagged {issue.flagCount} time(s)</p>
-                          <p className="text-xs text-gray-500">
-                            Reported by: {issue.reportedBy || issue.userId?.name || 'Anonymous'} on {new Date(issue.createdAt || issue.reportedAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div className="flex flex-col space-y-2 ml-4">
-                          <button 
-                            onClick={() => setSelectedIssue(issue)}
-                            className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                          >
-                            View Details
-                          </button>
-                          <button 
-                            onClick={() => updateIssueStatus(issue.id || issue._id, 'Resolved')}
-                            className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-                          >
-                            Approve & Resolve
-                          </button>
-                          <button className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
-                            Remove Issue
-                          </button>
+                {issues.filter((issue) => issue.flagCount > 0).length > 0 ? (
+                  issues
+                    .filter((issue) => issue.flagCount > 0)
+                    .map((issue) => (
+                      <div
+                        key={issue.id || issue._id}
+                        className="border border-red-200 rounded-lg p-4 bg-red-50"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h4 className="font-medium">{issue.title}</h4>
+                            <p className="text-sm text-gray-600">
+                              {issue.description}
+                            </p>
+                            <p className="text-xs text-red-600 mt-1">
+                              Flagged {issue.flagCount} time(s)
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Reported by:{" "}
+                              {issue.reportedBy ||
+                                issue.userId?.name ||
+                                "Anonymous"}{" "}
+                              on{" "}
+                              {new Date(
+                                issue.createdAt || issue.reportedAt
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="flex flex-col space-y-2 ml-4">
+                            <button
+                              onClick={() => setSelectedIssue(issue)}
+                              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            >
+                              View Details
+                            </button>
+                            <button
+                              onClick={() =>
+                                updateIssueStatus(
+                                  issue.id || issue._id,
+                                  "Resolved"
+                                )
+                              }
+                              className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                            >
+                              Approve & Resolve
+                            </button>
+                            <button className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                              Remove Issue
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    ))
                 ) : (
                   <div className="text-center py-8">
                     <Flag className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">No flagged issues at the moment</p>
+                    <p className="text-gray-500">
+                      No flagged issues at the moment
+                    </p>
                   </div>
                 )}
               </div>
 
               <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-4">Category Statistics</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Category Statistics
+                </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {categories.map(category => {
-                    const count = issues.filter(issue => issue.category === category).length;
+                  {categories.map((category) => {
+                    const count = issues.filter(
+                      (issue) => issue.category === category
+                    ).length;
                     return (
                       <div key={category} className="bg-gray-50 p-3 rounded-lg">
-                        <div className="text-sm font-medium text-gray-700">{category}</div>
-                        <div className="text-2xl font-bold text-gray-900">{count}</div>
+                        <div className="text-sm font-medium text-gray-700">
+                          {category}
+                        </div>
+                        <div className="text-2xl font-bold text-gray-900">
+                          {count}
+                        </div>
                       </div>
                     );
                   })}

@@ -19,11 +19,8 @@ function Signup() {
         {
           username,
           email,
-<<<<<<< HEAD
           phone,
-=======
           phone, 
->>>>>>> f09785aa78a877c36676a6319ff923961087eb49
           password,
         },
         {
