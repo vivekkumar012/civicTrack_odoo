@@ -19,6 +19,9 @@ const issueSchema = new mongoose.Schema(
       enum: ["Pending", "InProgress", "Resolved"],
       default: "Pending",
     },
+    location :{
+      type:String ,
+    }
   },
   { timestamps: true }
 );

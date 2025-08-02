@@ -28,4 +28,7 @@ app.use(cors({
 
 
 import userRoute from "./Routes/user.route.js";
+import  issuesRoute from "./Routes/issue.controllers.js"
+
 app.use("/api/auth/", userRoute);
+app.use("api/issues/" , issuesRoute);
