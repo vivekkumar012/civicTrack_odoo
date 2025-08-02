@@ -1,4 +1,4 @@
-import express from "express";
+
 import bcrypt from "bcryptjs";
 import {User} from "../Model/user.model.js";
 import jwt from "jsonwebtoken";
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
       });
     }
 
-    const Isuser = await User.findOne({
+    let Isuser = await User.findOne({
       email,
     });
 
@@ -45,9 +45,11 @@ export const register = async (req, res) => {
       newUser,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal Error occured !!",
       success: false,
+      error:error.message,
     });
   }
 };
