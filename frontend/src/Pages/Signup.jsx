@@ -19,7 +19,11 @@ function Signup() {
         {
           username,
           email,
+<<<<<<< HEAD
           phone,
+=======
+          phone, 
+>>>>>>> f09785aa78a877c36676a6319ff923961087eb49
           password,
         },
         {
@@ -57,7 +61,7 @@ function Signup() {
             </div>
           </header>
         </div>
-        <div className="w-[500px] shadow-lg bg-gray-600 rounded-lg p-8 mt-20">
+        <div className="w-[500px] shadow-lg bg-gray-400 rounded-lg p-8 mt-20">
           <h2 className="text-2xl font-bold text-center mb-4 text-orange-500">
             Sign Up
           </h2>
@@ -135,6 +139,9 @@ function Signup() {
             >
               Signup
             </button>
+            <div className="text-center py-2 text-gray-800">
+                Already have a account? <Link className="underline text-black" to={'/login'}>Login</Link>
+            </div>
           </form>
         </div>
       </div>
