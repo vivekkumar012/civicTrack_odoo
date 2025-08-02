@@ -18,7 +18,8 @@ import {
   Trash2,
   Edit,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -136,18 +137,26 @@ const Header = () => {
   //   setIsAuthenticated(true);
   // }
 
-  const API_BASE_URL = "http://localhost:3001/api";
+  const API_BASE_URL = "http://localhost:3000/api";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+    //const userData = localStorage.getItem("user");
 
-    if (token && userData) {
-      setUser(JSON.parse(userData));
+    if (token) {
+      //setUser(JSON.parse(userData));
       setIsAuthenticated(true);
       fetchIssues();
     }
   }, []);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    toast.success("Logout Successfully");
+    navigate("/login");
+  }
 
   // Fetch Issues from Backend
   const fetchIssues = async () => {
@@ -313,7 +322,7 @@ const Header = () => {
                 <Settings className="h-5 w-5" />
               </button>
               {isAuthenticated ? (
-                <button className="text-sm font-medium text-gray-700">
+                <button onClick={handleLogout} className="text-sm font-medium text-gray-700">
                   Logout
                 </button>
               ) : (
