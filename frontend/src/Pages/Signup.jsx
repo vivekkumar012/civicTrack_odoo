@@ -16,11 +16,10 @@ function Signup() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/register",
+        "http://localhost:3000/api/auth/register",
         {
           username,
           email,
-          phone,
           phone, 
           password,
         },
@@ -28,6 +27,8 @@ function Signup() {
           withCredentials: true,
         }
       );
+
+      console.log(response);
       toast.success("Signup Successfully");
       navigate("/login");
       
