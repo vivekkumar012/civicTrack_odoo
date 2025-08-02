@@ -1,5 +1,5 @@
-
 // src/pages/ReportIssue.jsx
+
 import React, { useState, useEffect, useRef } from "react";
 import { X, MapPin, Crosshair, Camera, Upload } from "lucide-react";
 
@@ -29,124 +29,6 @@ const ReportIssue = ({ userLocation, setIssues }) => {
   const mapRef = useRef(null);
 
   const API_BASE_URL = "http://localhost:3000/api";
-
-  // Load Leaflet CSS and JS
-  useEffect(() => {
-    // Check if Leaflet is already loaded
-    if (window.L) {
-      setLeafletLoaded(true);
-      return;
-    }
-
-    // Load Leaflet CSS
-    const leafletCSS = document.createElement('link');
-    leafletCSS.rel = 'stylesheet';
-    leafletCSS.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    leafletCSS.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
-    leafletCSS.crossOrigin = '';
-    document.head.appendChild(leafletCSS);
-
-    // Load Leaflet JS
-    const leafletJS = document.createElement('script');
-    leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    leafletJS.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
-    leafletJS.crossOrigin = '';
-    leafletJS.onload = () => {
-      setLeafletLoaded(true);
-    };
-    document.head.appendChild(leafletJS);
-
-    return () => {
-      // Cleanup function to remove elements if component unmounts
-      document.head.removeChild(leafletCSS);
-      document.head.removeChild(leafletJS);
-    };
-  }, []);
-
-  // Initialize map when Leaflet is loaded
-  useEffect(() => {
-    if (leafletLoaded && mapRef.current && !map) {
-      initializeMap();
-    }
-  }, [leafletLoaded, map]);
-
-  const initializeMap = () => {
-    if (!window.L || !mapRef.current) return;
-
-    try {
-      // Initialize the map
-      const mapInstance = window.L.map(mapRef.current).setView([selectedLocation.lat, selectedLocation.lng], 15);
-
-      // Add OpenStreetMap tiles
-      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(mapInstance);
-
-      // Add a marker
-      const markerInstance = window.L.marker([selectedLocation.lat, selectedLocation.lng], {
-        draggable: true
-      }).addTo(mapInstance);
-
-      // Handle marker drag
-      markerInstance.on('dragend', function(e) {
-        const position = e.target.getLatLng();
-        setSelectedLocation({
-          lat: position.lat,
-          lng: position.lng
-        });
-      });
-
-      // Handle map click
-      mapInstance.on('click', function(e) {
-        const { lat, lng } = e.latlng;
-        setSelectedLocation({ lat, lng });
-        markerInstance.setLatLng([lat, lng]);
-      });
-
-      setMap(mapInstance);
-      setMarker(markerInstance);
-    } catch (error) {
-      console.error('Error initializing map:', error);
-      setError('Failed to load map. Please try refreshing the page.');
-    }
-  };
-
-  // Update marker position when selectedLocation changes
-  useEffect(() => {
-    if (marker && selectedLocation && window.L) {
-      marker.setLatLng([selectedLocation.lat, selectedLocation.lng]);
-    }
-    if (map && selectedLocation) {
-      map.setView([selectedLocation.lat, selectedLocation.lng]);
-    }
-  }, [selectedLocation, marker, map]);
-
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      setLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newPos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          setSelectedLocation(newPos);
-          setLoading(false);
-        },
-        (error) => {
-          setError("Unable to get your current location. Please select manually on the map.");
-          setLoading(false);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 60000
-        }
-      );
-    } else {
-      setError("Geolocation is not supported by this browser.");
-    }
-  };
 
   // Load Leaflet CSS and JS
   useEffect(() => {
@@ -316,7 +198,7 @@ const ReportIssue = ({ userLocation, setIssues }) => {
         if (photo instanceof File) formData.append("photos", photo);
       });
 
-      const response = await fetch(`${API_BASE_URL}/issues` ,{
+      const response = await fetch(`${API_BASE_URL}/issues`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -342,7 +224,7 @@ const ReportIssue = ({ userLocation, setIssues }) => {
   };
 
   return (
-    <div className='bg-gradient-to-r from-[#0f2027] via-[#203a43] to-[#2c5364] min-h-screen'>
+    <div className='bg-gradient-to-r  h-screen w-full'>
         <div className="max-w-4xl mx-auto p-6 bg-[#e0f7f1] text-[#1c3d3a] rounded-lg shadow">
             <h1 className="text-2xl font-bold mb-4">Report a New Issue</h1>
 
