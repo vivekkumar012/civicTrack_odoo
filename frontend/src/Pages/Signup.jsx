@@ -18,9 +18,9 @@ function Signup() {
       const response = await axios.post(
         "http://localhost:3000/api/auth/register",
         {
-          username,
+          userName: username,
           email,
-          phone, 
+          phoneNumber: phone, 
           password,
         },
         {
