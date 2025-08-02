@@ -223,7 +223,7 @@ const ReportIssue = ({ userLocation, setIssues }) => {
   };
 
   return (
-    <div className='bg-gradient-to-r from-[#0f2027] via-[#203a43] to-[#2c5364] min-h-screen'>
+    <div className='bg-gradient-to-r  h-screen w-full'>
         <div className="max-w-4xl mx-auto p-6 bg-[#e0f7f1] text-[#1c3d3a] rounded-lg shadow">
             <h1 className="text-2xl font-bold mb-4">Report a New Issue</h1>
 
